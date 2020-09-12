@@ -80,5 +80,19 @@ Route::group([
             'uses' => 'PostsController@destroy',
             'permissions' => 'posts-delete',
         ]);
+
+        // the draft routes
+        Route::post('draft/{post?}', [
+            'as' => 'admin.posts.draft',
+            'uses' => 'PostsController@saveDraft',
+            'permissions' => 'posts-draft',
+        ]);
+
+        Route::put('publish/{post}', [
+            'as' => 'admin.posts.publish',
+            'uses' => 'PostsController@publishDraft',
+            'permissions' => 'posts-publish',
+        ]);
+
     });
 });

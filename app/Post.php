@@ -6,8 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 // use Varbox\Options\ActivityOptions;
 // use Varbox\Traits\HasActivity;
 use Varbox\Options\OrderOptions;
+use Varbox\Options\SlugOptions;
+use Varbox\Traits\HasSlug;
 use Varbox\Traits\HasUploads;
 use Varbox\Traits\IsCsvExportable;
+use Varbox\Traits\IsDraftable;
 use Varbox\Traits\IsFilterable;
 use Varbox\Traits\IsOrderable;
 use Varbox\Traits\IsSortable;
@@ -20,6 +23,17 @@ class Post extends Model
     use IsOrderable;
     use IsCsvExportable;
     use HasUploads;
+    use IsDraftable;
+    use HasSlug;
+
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = [
+        'drafted_at',
+    ];
 
     /**
      * The database table.
@@ -40,7 +54,20 @@ class Post extends Model
         'description',
         'image',
         'pdf',
+        'slug',
     ];
+
+    /**
+     * Get the options for the HasSlug trait.
+     *
+     * @return SlugOptions
+     */
+    public function getSlugOptions(): SlugOptions
+    {
+        return SlugOptions::instance()
+            ->generateSlugFrom('title')
+            ->saveSlugTo('slug');
+    }
 
     /**
      * Get the heading columns for the csv.

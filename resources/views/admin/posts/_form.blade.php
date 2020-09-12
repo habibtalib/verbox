@@ -38,12 +38,36 @@
         </div>
     </div>
 </div>
+
+@if($item->exists && !isset($revision))
+@include('varbox::helpers.draft.container', [
+'model' => $item,
+'route' => 'admin.posts.publish',
+'permission' => 'posts-publish'
+])
+@endif
 <div class="col-12">
     <div class="card">
         <div class="card-body">
             <div class="d-flex text-left">
+
                 @include('varbox::buttons.cancel', ['url' => route('admin.posts.index')])
 
+                @if($item->exists)
+                @if(!$item->isDrafted())
+                @permission('posts-draft')
+                @include('varbox::buttons.save_draft', [
+                'url' => route('admin.posts.draft', $item->id)
+                ])
+                @endpermission
+                @endif
+                @else
+                @permission('posts-draft')
+                @include('varbox::buttons.save_draft', [
+                'url' => route('admin.posts.draft')
+                ])
+                @endpermission
+                @endif
                 @if($item->exists)
                 @include('varbox::buttons.save_stay')
                 @else

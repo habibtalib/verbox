@@ -8,19 +8,53 @@ use App\Http\Requests\Admin\PostRequest;
 use App\Post;
 use App\Sorts\Admin\PostSort;
 use App\User;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Varbox\Traits\CanCrud;
+use Varbox\Traits\CanDraft;
 use Varbox\Traits\CanOrder;
 
 class PostsController extends Controller
 {
     use CanCrud;
     use CanOrder;
+    use CanDraft;
 
     /**
      * @var Post
      */
     protected $model;
+
+    /**
+     * Get the model to be drafted.
+     *
+     * @return string
+     */
+    protected function draftModel(): string
+    {
+        return Post::class;
+    }
+
+    /**
+     * Get the url to redirect after drafting/publishing.
+     *
+     * @param Model $model
+     * @return string
+     */
+    protected function draftRedirectTo(Model $model): string
+    {
+        return route('admin.posts.edit', $model->id);
+    }
+
+    /**
+     * Get the form request to validate the draft upon.
+     *
+     * @return string|null
+     */
+    protected function draftRequest(): ?string
+    {
+        return PostRequest::class;
+    }
 
     /**
      * @param Post $model
@@ -59,9 +93,9 @@ class PostsController extends Controller
         return $this->_index(function () use ($request, $filter, $sort) {
             if (count($request->all()) == 0) {
                 // fetch records in order when no filtering / sorting is applied
-                $this->items = $this->model->ordered()->get();
+                $this->items = $this->model->withDrafts()->ordered()->get();
             } else {
-                $this->items = $this->model->query()
+                $this->items = $this->model->withDrafts()->query()
                     ->filtered($request->all(), $filter)
                     ->sorted($request->all(), $sort)
                     ->paginate(config('varbox.crud.per_page', 30));
