@@ -6,13 +6,16 @@ use App\Filters\Admin\PostFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\PostRequest;
 use App\Post;
+use App\Sorts\Admin\PostSort;
 use App\User;
 use Illuminate\Http\Request;
 use Varbox\Traits\CanCrud;
+use Varbox\Traits\CanOrder;
 
 class PostsController extends Controller
 {
     use CanCrud;
+    use CanOrder;
 
     /**
      * @var Post
@@ -35,12 +38,19 @@ class PostsController extends Controller
      * @return \Illuminate\View\View
      * @throws \Exception
      */
-    public function index(Request $request, PostFilter $filter)
+    public function index(Request $request, PostFilter $filter, PostSort $sort)
     {
-        return $this->_index(function () use ($request, $filter) {
-            $this->items = $this->model->query()
-                ->filtered($request->all(), $filter)
-                ->paginate(config('varbox.crud.per_page', 30));
+        return $this->_index(function () use ($request, $filter, $sort) {
+            if (count($request->all()) == 0) {
+                // fetch records in order when no filtering / sorting is applied
+                $this->items = $this->model->ordered()->get();
+            } else {
+                $this->items = $this->model->query()
+                    ->filtered($request->all(), $filter)
+                    ->sorted($request->all(), $sort)
+                    ->paginate(config('varbox.crud.per_page', 30));
+
+            }
 
             $this->title = 'Posts';
             $this->view = view('admin.posts.index');

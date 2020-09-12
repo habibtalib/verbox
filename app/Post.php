@@ -5,12 +5,17 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 // use Varbox\Options\ActivityOptions;
 // use Varbox\Traits\HasActivity;
+use Varbox\Options\OrderOptions;
 use Varbox\Traits\IsFilterable;
+use Varbox\Traits\IsOrderable;
+use Varbox\Traits\IsSortable;
 
 class Post extends Model
 {
     // use HasActivity;
     use IsFilterable;
+    use IsSortable;
+    use IsOrderable;
 
     /**
      * The database table.
@@ -30,6 +35,11 @@ class Post extends Model
         'subtitle',
         'description',
     ];
+
+    public static function getOrderOptions()
+    {
+        return OrderOptions::instance();
+    }
 
     /**
      * Set the options for the HasActivity trait.

@@ -51,6 +51,12 @@ Route::group([
             'permissions' => 'posts-add',
         ]);
 
+        Route::patch('order', [
+            'as' => 'admin.posts.order',
+            'uses' => 'PostsController@order',
+            'permissions' => 'posts-list',
+        ]);
+
         Route::get('edit/{post}', [
             'as' => 'admin.posts.edit',
             'uses' => 'PostsController@edit',

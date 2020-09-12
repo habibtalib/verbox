@@ -17,7 +17,9 @@
     <div class="col-lg-9">
         @include('admin.posts._table')
 
+        @if(count(request()->all()))
         {!! $items->links('varbox::pagination', request()->query()) !!}
+        @endif
     </div>
 </div>
 @endsection

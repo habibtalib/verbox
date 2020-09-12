@@ -1,11 +1,15 @@
 <div class="card">
-    <table class="table card-table table-vcenter">
-        <tr>
-            <th>Title</th>
+    <table class="table card-table table-vcenter" data-orderable="{{ empty(request()->all()) ? 'true' : 'false' }}"
+        data-order-url="{{ route('admin.posts.order') }}" data-order-model="{{ \App\Post::class }}"
+        data-order-token="{{ csrf_token() }}">
+        <tr class="nodrag nodrop">
+            <th class="sortable" data-sort="title">
+                <i class="fa fa-sort mr-2"></i>Title
+            </th>
             <th class="text-right d-table-cell"></th>
         </tr>
         @forelse($items as $index => $item)
-        <tr>
+        <tr id="{{ $item->id }}">
             <td>
                 {{ $item->title ?: 'N/A' }}
             </td>
