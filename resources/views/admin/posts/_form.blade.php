@@ -26,6 +26,14 @@
                 <div class="col-md-12">
                     {!! form_admin()->editor('description', 'Description') !!}
                 </div>
+                <div class="col-md-12">
+                    {!! uploader()->field('image')->label('Image')->model($item)->types('image')->accept('jpg',
+                    'png')->manager() !!}
+                </div>
+                <div class="col-md-12">
+                    {!! uploader()->field('pdf')->label('Pdf')->model($item)->types('file')->accept('pdf')->manager()
+                    !!}
+                </div>
             </div>
         </div>
     </div>

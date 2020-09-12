@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 // use Varbox\Options\ActivityOptions;
 // use Varbox\Traits\HasActivity;
 use Varbox\Options\OrderOptions;
+use Varbox\Traits\HasUploads;
 use Varbox\Traits\IsCsvExportable;
 use Varbox\Traits\IsFilterable;
 use Varbox\Traits\IsOrderable;
@@ -18,6 +19,7 @@ class Post extends Model
     use IsSortable;
     use IsOrderable;
     use IsCsvExportable;
+    use HasUploads;
 
     /**
      * The database table.
@@ -36,6 +38,8 @@ class Post extends Model
         'title',
         'subtitle',
         'description',
+        'image',
+        'pdf',
     ];
 
     /**
@@ -47,6 +51,33 @@ class Post extends Model
     {
         return [
             'Title', 'User', 'Created At', 'Last Modified At',
+        ];
+    }
+
+    /**
+     * Get the specific upload config parts for this model.
+     *
+     * @return array
+     */
+    public function getUploadConfig()
+    {
+        return [
+            'images' => [
+                'styles' => [
+                    'image' => [
+                        'square' => [
+                            'width' => '200',
+                            'height' => '200',
+                            'ratio' => true,
+                        ],
+                        'landscape' => [
+                            'width' => '200',
+                            'height' => '100',
+                            'ratio' => true,
+                        ],
+                    ],
+                ],
+            ],
         ];
     }
 
