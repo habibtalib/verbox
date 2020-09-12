@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Filters\Admin\PostFilter;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\PostsController as FrontPostsController;
 use App\Http\Requests\Admin\PostRequest;
 use App\Post;
 use App\Sorts\Admin\PostSort;
@@ -13,12 +14,14 @@ use Illuminate\Http\Request;
 use Varbox\Traits\CanCrud;
 use Varbox\Traits\CanDraft;
 use Varbox\Traits\CanOrder;
+use Varbox\Traits\CanPreview;
 
 class PostsController extends Controller
 {
     use CanCrud;
     use CanOrder;
     use CanDraft;
+    use CanPreview;
 
     /**
      * @var Post
@@ -168,6 +171,8 @@ class PostsController extends Controller
             $this->redirect = redirect()->route('admin.posts.index');
 
             $this->item->update($request->all());
+            // $this->item->saveBlocks($request->input('blocks') ?: []);
+
         }, $request);
     }
 
@@ -192,5 +197,47 @@ class PostsController extends Controller
     protected function getUsers()
     {
         return User::excludingAdmins()->alphabetically()->get();
+    }
+
+    /**
+     * Get the model to be previewed.
+     *
+     * @return string
+     */
+    protected function previewModel(): string
+    {
+        return Post::class;
+    }
+
+    /**
+     * Get the controller where to dispatch the preview.
+     *
+     * @param Model $model
+     * @return Model
+     */
+    protected function previewController(Model $model): string
+    {
+        return FrontPostsController::class;
+    }
+
+    /**
+     * Get the action where to dispatch the preview.
+     *
+     * @param Model $model
+     * @return Model
+     */
+    protected function previewAction(Model $model): string
+    {
+        return 'show';
+    }
+
+    /**
+     * Get the form request to validate the preview upon.
+     *
+     * @return string|null
+     */
+    protected function previewRequest(): ?string
+    {
+        return PostRequest::class;
     }
 }

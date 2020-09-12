@@ -94,5 +94,12 @@ Route::group([
             'permissions' => 'posts-publish',
         ]);
 
+        // the preview route
+        Route::match(['post', 'put'], 'preview/{post?}', [
+            'as' => 'admin.posts.preview',
+            'uses' => 'PostsController@preview',
+            'permissions' => 'posts-preview',
+        ]);
+
     });
 });

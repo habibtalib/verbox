@@ -235,6 +235,13 @@ class PermissionsSeeder extends Seeder
                 'guard' => 'admin',
                 'name' => 'posts-publish',
             ],
+
+            'Preview' => [
+                'group' => 'Posts',
+                'label' => 'Preview',
+                'guard' => 'admin',
+                'name' => 'posts-preview',
+            ],
         ],
     ];
 

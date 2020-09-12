@@ -38,7 +38,14 @@
         </div>
     </div>
 </div>
+{{-- @if($item->exists)
+@include('varbox::helpers.block.container', [
+'model' => $item,
+'revision' => $revision ?? null
+])
+@endif --}}
 
+@include('varbox::helpers.meta.container', ['model' => $item ?? null])
 @if($item->exists && !isset($revision))
 @include('varbox::helpers.draft.container', [
 'model' => $item,
@@ -68,6 +75,11 @@
                 ])
                 @endpermission
                 @endif
+                @permission('posts-preview')
+                @include('varbox::buttons.preview', [
+                'url' => route('admin.posts.preview', $item->id)
+                ])
+                @endpermission
                 @if($item->exists)
                 @include('varbox::buttons.save_stay')
                 @else

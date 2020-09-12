@@ -5,8 +5,11 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 // use Varbox\Options\ActivityOptions;
 // use Varbox\Traits\HasActivity;
+// use Varbox\Options\BlockOptions;
 use Varbox\Options\OrderOptions;
 use Varbox\Options\SlugOptions;
+// use Varbox\Traits\HasBlocks;
+use Varbox\Traits\HasMetaTags;
 use Varbox\Traits\HasSlug;
 use Varbox\Traits\HasUploads;
 use Varbox\Traits\IsCsvExportable;
@@ -25,6 +28,8 @@ class Post extends Model
     use HasUploads;
     use IsDraftable;
     use HasSlug;
+    use HasMetaTags;
+    // use HasBlocks;
 
     /**
      * The attributes that should be mutated to dates.
@@ -43,6 +48,15 @@ class Post extends Model
     protected $table = 'posts';
 
     /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'meta' => 'array',
+    ];
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -55,7 +69,29 @@ class Post extends Model
         'image',
         'pdf',
         'slug',
+        'meta',
     ];
+
+    /**
+     * Set the options for the HasMetaTags trait.
+     *
+     * @return MetaTagOptions
+     */
+    public function getMetaTagOptions(): MetaTagOptions
+    {
+        return MetaTagOptions::instance();
+    }
+
+    /**
+     * Set the options for the HasBlocks trait.
+     *
+     * @return BlockOptions
+     */
+    // public function getBlockOptions()
+    // {
+    //     return BlockOptions::instance()
+    //         ->withLocations(['content', 'sidebar']);
+    // }
 
     /**
      * Get the options for the HasSlug trait.
