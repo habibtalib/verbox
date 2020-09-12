@@ -35,6 +35,22 @@ class PostsController extends Controller
 
     /**
      * @param Request $request
+     * @param PostFilter $filter
+     * @param PostSort $sort
+     * @return mixed
+     */
+    public function csv(Request $request, PostFilter $filter, PostSort $sort)
+    {
+        $items = $this->model/*->withDrafts()*/
+            ->filtered($request->all(), $filter)
+            ->sorted($request->all(), $sort)
+            ->get();
+
+        return $this->model->exportToCsv($items);
+    }
+
+    /**
+     * @param Request $request
      * @return \Illuminate\View\View
      * @throws \Exception
      */

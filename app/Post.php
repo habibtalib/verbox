@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 // use Varbox\Options\ActivityOptions;
 // use Varbox\Traits\HasActivity;
 use Varbox\Options\OrderOptions;
+use Varbox\Traits\IsCsvExportable;
 use Varbox\Traits\IsFilterable;
 use Varbox\Traits\IsOrderable;
 use Varbox\Traits\IsSortable;
@@ -16,6 +17,7 @@ class Post extends Model
     use IsFilterable;
     use IsSortable;
     use IsOrderable;
+    use IsCsvExportable;
 
     /**
      * The database table.
@@ -35,6 +37,33 @@ class Post extends Model
         'subtitle',
         'description',
     ];
+
+    /**
+     * Get the heading columns for the csv.
+     *
+     * @return array
+     */
+    public function getCsvColumns()
+    {
+        return [
+            'Title', 'User', 'Created At', 'Last Modified At',
+        ];
+    }
+
+    /**
+     * Get the values for a row in the csv.
+     *
+     * @return array
+     */
+    public function toCsvArray()
+    {
+        return [
+            $this->title,
+            $this->user && $this->user->exists ? $this->user->email : 'None',
+            $this->created_at->format('Y-m-d H:i:s'),
+            $this->updated_at->format('Y-m-d H:i:s'),
+        ];
+    }
 
     public static function getOrderOptions()
     {

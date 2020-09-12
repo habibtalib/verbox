@@ -11,6 +11,11 @@
                 @permission('posts-add')
                 @include('varbox::buttons.add', ['url' => route('admin.posts.create')])
                 @endpermission
+                @permission('posts-export')
+                @include('varbox::buttons.csv', [
+                'url' => route('admin.posts.csv', request()->query())
+                ])
+                @endpermission
             </div>
         </div>
     </div>

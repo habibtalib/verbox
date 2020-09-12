@@ -45,6 +45,12 @@ Route::group([
             'permissions' => 'posts-add',
         ]);
 
+        Route::get('csv', [
+            'as' => 'admin.posts.csv',
+            'uses' => 'PostsController@csv',
+            'permissions' => 'posts-export',
+        ]);
+
         Route::post('store', [
             'as' => 'admin.posts.store',
             'uses' => 'PostsController@store',
